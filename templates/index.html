@@ -1,0 +1,51 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Message Processor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#messageForm").submit(function(e) {
+                // Prevent the form from being submitted traditionally
+                e.preventDefault();
+                
+                let message = $("#message").val();
+                
+                // Make an AJAX POST request to the /run-api route
+                $.ajax({
+                    url: '/run-api',
+                    type: 'POST',
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({ "text": message }), // Changed "message" to "text"
+                    success: function(response) {
+                        console.log(response);
+                        // Handle the response from the server
+                        $('#chat-box').append('<div>' + response + '</div>'); // Or however you want to handle the response
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">Left Sidebar</div>
+        <div class="main">
+            <div id="welcome-message">Welcome to GPT Chat!</div>
+            <div id="chat-box"></div>
+        </div>
+        <div class="sidebar">
+            <h2>Right Sidebar</h2>
+            <p>Some information about the chat or any other relevant details can be added here.</p>
+        </div>
+    </div>
+    <form id="messageForm" class="prompt">
+        <input type="text" id="message" name="message" required placeholder="Type a message...">
+        <button type="submit" id="sendButton">Send</button>
+    </form>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
